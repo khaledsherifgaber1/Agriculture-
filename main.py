@@ -4,7 +4,6 @@ import numpy as np
 import joblib
 from sklearn.preprocessing import PowerTransformer
 
-
 # Functions for data processing
 def SQ(Data, SQ_Columns):
     for i in SQ_Columns:
@@ -12,13 +11,11 @@ def SQ(Data, SQ_Columns):
         Data.drop(i, axis=1, inplace=True)
     return Data
 
-
 def Log(Data, log_Columns):
     for i in log_Columns:
         Data[f'Log_{i}'] = np.log1p(Data[i])
         Data.drop(i, axis=1, inplace=True)
     return Data
-
 
 def PT(Data, PT_Columns):
     transformers = {}
@@ -31,7 +28,6 @@ def PT(Data, PT_Columns):
             Data[f'PT_{col}'] = Data[[col]]  # Pass through if not transformable
         Data.drop(col, axis=1, inplace=True)
     return Data
-
 
 def Feature_Engineering(Train_Set):
     def PH_Classification(PH):
@@ -50,7 +46,6 @@ def Feature_Engineering(Train_Set):
     Train_Set["Rainfall_Humidity_Index"] = Train_Set['Rainfall'] * Train_Set['Humidity']
     Train_Set["PH_Categories"] = Train_Set['pH_Value'].apply(PH_Classification)
     return Train_Set
-
 
 # Streamlit App
 st.set_page_config(page_title="Crop Recommendation System", page_icon="🌾", layout="wide")
@@ -81,37 +76,61 @@ st.markdown("""
         position: relative;
         z-index: 2; /* Make sure content appears above the filter */
     }
-    </style>
-    """, unsafe_allow_html=True)
-st.markdown("""
-    <style>
+
     .header {
         text-align: center;
         background-color: #4CAF50;
-        padding: 10px;
+        padding: 20px;
         color: white;
-        font-size: 2em;
+        font-size: 2.5em;
         font-weight: bold;
+        border-bottom: 2px solid #388E3C; /* Darker green border */
+        margin-bottom: 40px;
     }
+
     .footer {
         text-align: center;
-        margin-top: 40px;
         padding: 10px;
         color: #4CAF50;
         font-size: 1em;
         border-top: 1px solid #ddd;
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: white; /* Ensures footer is visible against dark backgrounds */
+    }
+
+    .title {
+        font-size: 3em;
+        font-weight: bold;
+        color: #fff; /* White text color */
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .description {
+        font-size: 1.2em;
+        color: #ddd; /* Light gray text color */
+        text-align: center;
+        margin-top: 10px;
+        margin-bottom: 40px;
+    }
+
+    .input-section {
+        background-color: rgba(255, 255, 255, 0.9); /* Slightly more opaque white background */
+        border-radius: 10px;
+        padding: 30px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+        max-width: 700px;
+        margin: 0 auto;
     }
     </style>
+    """, unsafe_allow_html=True)
+
+# Header
+st.markdown("""
     <div class="header">Crop Recommendation System</div>
     """, unsafe_allow_html=True)
-
-# Add footer at the end of your code
-st.markdown("""
-    <div class="footer">
-        <p>&copy; 2024 Your Name | <a href="https://github.com/yourusername" target="_blank" style="color: #4CAF50;">GitHub</a></p>
-    </div>
-    """, unsafe_allow_html=True)
-
 
 # Title and description
 st.markdown('<h1 class="title">🌿 Crop Recommendation System</h1>', unsafe_allow_html=True)
@@ -179,52 +198,57 @@ user_data = pd.DataFrame(data=Scaller_Data, columns=Scaller.get_feature_names_ou
 
 # Ensure columns match those expected by the scaler
 Final = user_data[['Log_Humidity', 'Log_Rainfall', 'Log_Rainfall_Humidity_Index',
-                   'PT_Potassium', 'Log_Phosphorus', 'Log_NPK_Average',
-                   'Temp_Humididty_Index', 'SQ_Nitrogen', 'Log_PK_Ratio', 'Temperature']]
+                   'PT_Potassium', 'Log_Phosphorus', 'Log_NPK_Average', 'Log_PK_Ratio',
+                   'SQ_Nitrogen', 'Log_NK_Ratio', 'Temp_Humididty_Index']]
 
-# Load the Model
-model = joblib.load("Extra_Tree_model (1).pkl")
+# Load Model
+model = joblib.load(r'C:\Users\Target\DownloadsExtra_Tree_model.pkl')
 
-# Prediction Button
-if st.button('Predict Crop'):
-    try:
-        # Predict
-        prediction = model.predict(Final)
-        predicted_crop = encoder_2.inverse_transform(prediction)
+# Define crop images URLs
+crop_images = {
+    "Rice": "https://example.com/images/rice.jpg",
+    "Maize": "https://example.com/images/maize.jpg",
+    "Jute": "https://example.com/images/jute.jpg",
+    "Cotton": "https://example.com/images/cotton.jpg",
+    "Coconut": "https://example.com/images/coconut.jpg",
+    "Papaya": "https://example.com/images/papaya.jpg",
+    "Orange": "https://example.com/images/orange.jpg",
+    "Apple": "https://example.com/images/apple.jpg",
+    "Muskmelon": "https://example.com/images/muskmelon.jpg",
+    "Watermelon": "https://example.com/images/watermelon.jpg",
+    "Grapes": "https://example.com/images/grapes.jpg",
+    "Mango": "https://example.com/images/mango.jpg",
+    "Banana": "https://example.com/images/banana.jpg",
+    "Pomegranate": "https://example.com/images/pomegranate.jpg",
+    "Lentil": "https://example.com/images/lentil.jpg",
+    "Blackgram": "https://example.com/images/blackgram.jpg",
+    "MungBean": "https://example.com/images/mungbean.jpg",
+    "MothBeans": "https://example.com/images/mothbeans.jpg",
+    "PigeonPeas": "https://example.com/images/pigeonpeas.jpg",
+    "KidneyBeans": "https://example.com/images/kidneybeans.jpg",
+    "ChickPea": "https://example.com/images/chickpea.jpg",
+    "Coffee": "https://example.com/images/coffee.jpg"
+}
 
-        # Crop Icons
-        crop_icons = {
-            'Rice': 'https://example.com/icons/rice.png',
-            'Maize': 'https://example.com/icons/maize.png',
-            'Jute': 'https://example.com/icons/jute.png',
-            'Cotton': 'https://example.com/icons/cotton.png',
-            'Coconut': 'https://example.com/icons/coconut.png',
-            'Papaya': 'https://example.com/icons/papaya.png',
-            'Orange': 'https://example.com/icons/orange.png',
-            'Apple': 'https://example.com/icons/apple.png',
-            'Muskmelon': 'https://example.com/icons/muskmelon.png',
-            'Watermelon': 'https://example.com/icons/watermelon.png',
-            'Grapes': 'https://example.com/icons/grapes.png',
-            'Mango': 'https://example.com/icons/mango.png',
-            'Banana': 'https://example.com/icons/banana.png',
-            'Pomegranate': 'https://example.com/icons/pomegranate.png',
-            'Lentil': 'https://example.com/icons/lentil.png',
-            'Blackgram': 'https://example.com/icons/blackgram.png',
-            'MungBean': 'https://example.com/icons/mungbean.png',
-            'MothBeans': 'https://example.com/icons/mothbeans.png',
-            'PigeonPeas': 'https://example.com/icons/pigeonpeas.png',
-            'KidneyBeans': 'https://example.com/icons/kidneybeans.png',
-            'ChickPea': 'https://example.com/icons/chickpea.png',
-            'Coffee': 'https://example.com/icons/coffee.png'
-        }
+# Predict
+try:
+    prediction = model.predict(Final)
+    prediction_prob = model.predict_proba(Final)
+    top_crops = list(crop_images.keys())
+    recommended_crop = top_crops[np.argmax(prediction_prob)]
 
-        crop_name = predicted_crop[0]
-        icon_url = crop_icons.get(crop_name, 'https://example.com/icons/default.png')
-
-        st.image(icon_url, width=150, caption=f"Recommended Crop: {crop_name}")
-    except Exception as e:
-        st.error(f"An error occurred: {e}")
+    st.subheader('Recommended Crop')
+    st.write(f"The recommended crop is: **{recommended_crop}**")
+    
+    # Display crop image
+    if recommended_crop in crop_images:
+        st.image(crop_images[recommended_crop], caption=recommended_crop, use_column_width=True)
+    else:
+        st.write("No image available for the recommended crop.")
+except Exception as e:
+    st.error(f"An error occurred: {e}")
 
 # Footer
-st.markdown('<div class="footer"><p>&copy; 2024 Crop Recommendation System. All rights reserved.</p></div>',
-            unsafe_allow_html=True)
+st.markdown("""
+    <div class="footer">Powered by Your Company | Contact us: info@yourcompany.com</div>
+    """, unsafe_allow_html=True)
