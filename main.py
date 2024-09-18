@@ -202,7 +202,7 @@ Final = user_data[['Log_Humidity', 'Log_Rainfall', 'Log_Rainfall_Humidity_Index'
                    'SQ_Nitrogen', 'Log_NK_Ratio', 'Temp_Humididty_Index']]
 
 # Load Model
-model = joblib.load('Extra_Tree_model.pkl')
+model = joblib.load('Extra_Tree_model (1).pkl')
 
 # Define crop images URLs
 crop_images = {
