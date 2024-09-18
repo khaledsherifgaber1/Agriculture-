@@ -59,15 +59,30 @@ st.set_page_config(page_title="Crop Recommendation System", page_icon="🌾", la
 st.markdown("""
     <style>
     .stApp {
-        background-image: url('https://github.com/khaledsherifgaber1/Agriculture-/blob/cc52ea76e869e8731820783d7a2862eba842e39f/Gemini_Generated_Image_w5z0g0w5z0g0w5z0.jpeg?raw=true');
+        background-image: url('https://github.com/khaledsherifgaber1/Agriculture-/blob/main/crops-growing-in-thailand.jpg?raw=true');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
-        color: #333;
+        position: relative;
+    }
+
+    .stApp::before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(128, 128, 128, 0.5); /* Semi-transparent gray */
+        z-index: 1;
+    }
+
+    .stApp > div {
+        position: relative;
+        z-index: 2; /* Make sure content appears above the filter */
     }
     </style>
     """, unsafe_allow_html=True)
-
 st.markdown("""
     <style>
     .header {
