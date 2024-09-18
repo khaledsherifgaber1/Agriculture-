@@ -116,6 +116,30 @@ with st.container():
 
     st.markdown('</div>', unsafe_allow_html=True)
 
+
+
+
+# Check for non-numeric values
+if not pd.api.types.is_numeric_dtype(user_data):
+    st.error("Input data contains non-numeric values. Please provide valid numerical inputs.")
+    st.stop()
+
+# Ensure columns match those expected by the scaler
+expected_columns = Scaller.get_feature_names_out()
+if not set(expected_columns).issubset(user_data.columns):
+    st.error("Mismatch between input data columns and expected columns for scaling.")
+    st.stop()
+
+# Print debug information
+st.write("User data before scaling:")
+st.write(user_data)
+
+# Apply Scaler
+try:
+    Scaller_Data = Scaller.transform(user_data)
+except Exception as e:
+    st.error(f"An error occurred while scaling the data: {e}")
+    st.stop()
 # Create DataFrame from user input
 user_data = pd.DataFrame({
     'Nitrogen': [nitrogen],
