@@ -49,7 +49,7 @@ def Feature_Engineering(Train_Set):
     return Train_Set
 
 # Streamlit App
-st.set_page_config(page_title="Crop Recommendation System", page_icon="🌾", layout="wide")
+st.set_page_config(page_title="Ghosn App", page_icon="🌾", layout="wide")
 
 # Custom CSS
 st.markdown("""
@@ -138,7 +138,6 @@ st.markdown("""
 st.markdown('<div class="header">Crop Recommendation System</div>', unsafe_allow_html=True)
 
 # Title and description
-st.markdown('<h1 class="title">🌿 Crop Recommendation System</h1>', unsafe_allow_html=True)
 st.markdown(
     '<p class="description">Enter your soil and climate conditions to get recommendations for the best crops to grow.</p>',
     unsafe_allow_html=True)
@@ -177,8 +176,8 @@ user_data = pd.DataFrame({
 user_data = Feature_Engineering(user_data)
 
 # Load Encoders
-encoder_1 = joblib.load("models/Ordinal_Encoder.pkl")
-encoder_2 = joblib.load("models/label_Encoder (1).pkl")
+encoder_1 = joblib.load("Ordinal_Encoder.pkl")
+encoder_2 = joblib.load("label_Encoder (1).pkl")
 
 # Apply Encoding
 user_data['PH_Cat'] = encoder_1.transform(user_data[['PH_Categories']])
@@ -197,12 +196,12 @@ SQ(user_data, SQ_Columns)
 user_data = PT(user_data, PT_Columns)
 
 # Load Scaler and Scale Data
-Scaller = joblib.load("models/FeatureScaler.pkl")
+Scaller = joblib.load("FeatureScaler.pkl")
 Scaller_Data = Scaller.transform(user_data)
 user_data = pd.DataFrame(data=Scaller_Data, columns=user_data.columns)
 
 # Load the Model
-model = joblib.load('models/Extra_Tree_model.pkl')
+model = joblib.load('Extra_Tree_model.pkl')
 
 # Predict the Crop
 prediction = model.predict(user_data)[0]
