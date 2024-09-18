@@ -90,16 +90,9 @@ st.markdown("""
     <div class="header">Crop Recommendation System</div>
     """, unsafe_allow_html=True)
 
-# Add footer at the end of your code
-st.markdown("""
-    <div class="footer">
-        <p>&copy; 2024 Your Name | <a href="https://github.com/yourusername" target="_blank" style="color: #4CAF50;">GitHub</a></p>
-    </div>
-    """, unsafe_allow_html=True)
 
 
 # Title and description
-st.markdown('<h1 class="title">🌿 Crop Recommendation System</h1>', unsafe_allow_html=True)
 st.markdown(
     '<p class="description">Enter your soil and climate conditions to get recommendations for the best crops to grow.</p>',
     unsafe_allow_html=True)
@@ -179,29 +172,29 @@ if st.button('Predict Crop'):
 
         # Crop Icons
         crop_icons = {
-            'Rice': 'https://example.com/icons/rice.png',
-            'Maize': 'https://example.com/icons/maize.png',
-            'Jute': 'https://example.com/icons/jute.png',
-            'Cotton': 'https://example.com/icons/cotton.png',
-            'Coconut': 'https://example.com/icons/coconut.png',
-            'Papaya': 'https://example.com/icons/papaya.png',
-            'Orange': 'https://example.com/icons/orange.png',
-            'Apple': 'https://example.com/icons/apple.png',
-            'Muskmelon': 'https://example.com/icons/muskmelon.png',
-            'Watermelon': 'https://example.com/icons/watermelon.png',
-            'Grapes': 'https://example.com/icons/grapes.png',
-            'Mango': 'https://example.com/icons/mango.png',
-            'Banana': 'https://example.com/icons/banana.png',
-            'Pomegranate': 'https://example.com/icons/pomegranate.png',
-            'Lentil': 'https://example.com/icons/lentil.png',
-            'Blackgram': 'https://example.com/icons/blackgram.png',
-            'MungBean': 'https://example.com/icons/mungbean.png',
-            'MothBeans': 'https://example.com/icons/mothbeans.png',
-            'PigeonPeas': 'https://example.com/icons/pigeonpeas.png',
-            'KidneyBeans': 'https://example.com/icons/kidneybeans.png',
-            'ChickPea': 'https://example.com/icons/chickpea.png',
-            'Coffee': 'https://example.com/icons/coffee.png'
-        }
+    'Rice': 'https://www.pngkey.com/png/full/137-1378768_rice-png.png',
+    'Maize': 'https://www.pngkey.com/png/full/84-849452_corn-maize-grain-plant-clipart.png',
+    'Jute': 'https://www.pngfind.com/pngs/m/11-113628_jute-png-image-jute-plant-png.png',
+    'Cotton': 'https://www.pngkey.com/png/full/274-2746382_cotton-cotton-plant-png.png',
+    'Coconut': 'https://www.pngkit.com/png/full/27-279157_coconut-icon-png-coconut-icon-transparent.png',
+    'Papaya': 'https://www.pngkey.com/png/full/49-496342_papaya-fruit-papaya-fruit-image-png.png',
+    'Orange': 'https://www.pngkey.com/png/full/274-2742951_orange-fruit-png.png',
+    'Apple': 'https://www.pngkit.com/png/full/1-15184_apple-fruit-png-transparent-background-apple-fruit.png',
+    'Muskmelon': 'https://www.pngfind.com/pngs/m/72-720453_muskmelon-png-image-musk-melon-png.png',
+    'Watermelon': 'https://www.pngkey.com/png/full/38-380874_watermelon-fruit-png-watermelon-png-image.png',
+    'Grapes': 'https://www.pngkit.com/png/full/201-2017066_grapes-png-transparent-background-grape.png',
+    'Mango': 'https://www.pngkit.com/png/full/63-635708_mango-mango-fruit-png-transparent-image.png',
+    'Banana': 'https://www.pngkit.com/png/full/55-558080_banana-png-image-banana-png-transparent.png',
+    'Pomegranate': 'https://www.pngkit.com/png/full/54-547457_pomegranate-fruit-png.png',
+    'Lentil': 'https://www.pngkit.com/png/full/203-2035965_lentil-png-lentils.png',
+    'Blackgram': 'https://www.pngkit.com/png/full/0-7555_blackgram-png.png',
+    'MungBean': 'https://www.pngkit.com/png/full/0-7664_mung-bean-mung-bean-png.png',
+    'MothBeans': 'https://www.pngkit.com/png/full/14-146668_beans-png-transparent-beans-png.png',
+    'PigeonPeas': 'https://www.pngkit.com/png/full/23-232837_pigeon-peas-png-image-pigeon-peas.png',
+    'KidneyBeans': 'https://www.pngkit.com/png/full/203-2034582_red-kidney-beans-png-image.png',
+    'ChickPea': 'https://www.pngkit.com/png/full/74-741289_chickpea-png-image-chickpea.png',
+    'Coffee': 'https://www.pngkit.com/png/full/161-161731_coffee-beans-png-coffee-beans.png'
+}
 
         crop_name = predicted_crop[0]
         icon_url = crop_icons.get(crop_name, 'https://example.com/icons/default.png')
