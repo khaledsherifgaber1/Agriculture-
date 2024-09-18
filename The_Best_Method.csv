@@ -1,0 +1,11 @@
+,Features,Best Method,Best Method After
+0,Nitrogen, Square Root,-0.07662969515876042
+1,Phosphorus,log,-0.7156949574683205
+2,Potassium,Power Transformer,-0.014583494499831689
+3,Humidity,log,-1.9080690589787614
+4,Rainfall,log,-0.2919281561898259
+5,NP_Ratio,Power Transformer,0.16826728134123886
+6,NK_Ratio,log,0.3148776434362511
+7,PK_Ratio,log,0.2716254896487757
+8,NPK_Average,log,-0.2530256745324789
+9,Rainfall_Humidity_Index,log,-0.2442640313489572
