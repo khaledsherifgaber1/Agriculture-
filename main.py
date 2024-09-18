@@ -1,3 +1,4 @@
+import os
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -50,7 +51,7 @@ def Feature_Engineering(Train_Set):
 # Streamlit App
 st.set_page_config(page_title="Crop Recommendation System", page_icon="🌾", layout="wide")
 
-# Add a custom background image
+# Custom CSS
 st.markdown("""
     <style>
     .stApp {
@@ -68,13 +69,13 @@ st.markdown("""
         left: 0;
         width: 100%;
         height: 100%;
-        background-color: rgba(128, 128, 128, 0.5); /* Semi-transparent gray */
+        background-color: rgba(0, 0, 0, 0.5); /* Dark overlay for better readability */
         z-index: 1;
     }
 
     .stApp > div {
         position: relative;
-        z-index: 2; /* Make sure content appears above the filter */
+        z-index: 2;
     }
 
     .header {
@@ -84,8 +85,9 @@ st.markdown("""
         color: white;
         font-size: 2.5em;
         font-weight: bold;
-        border-bottom: 2px solid #388E3C; /* Darker green border */
+        border-bottom: 2px solid #388E3C;
         margin-bottom: 40px;
+        border-radius: 10px;
     }
 
     .footer {
@@ -97,40 +99,43 @@ st.markdown("""
         position: fixed;
         bottom: 0;
         width: 100%;
-        background-color: white; /* Ensures footer is visible against dark backgrounds */
+        background-color: white;
+        border-radius: 10px 10px 0 0; /* Rounded top corners */
     }
 
     .title {
         font-size: 3em;
         font-weight: bold;
-        color: #fff; /* White text color */
+        color: #fff;
         text-align: center;
         margin-top: 20px;
     }
 
     .description {
         font-size: 1.2em;
-        color: #ddd; /* Light gray text color */
+        color: #ddd;
         text-align: center;
         margin-top: 10px;
         margin-bottom: 40px;
     }
 
     .input-section {
-        background-color: rgba(255, 255, 255, 0.9); /* Slightly more opaque white background */
+        background-color: rgba(255, 255, 255, 0.9);
         border-radius: 10px;
         padding: 30px;
         box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
         max-width: 700px;
         margin: 0 auto;
     }
+
+    .input-field {
+        margin-bottom: 15px;
+    }
     </style>
     """, unsafe_allow_html=True)
 
 # Header
-st.markdown("""
-    <div class="header">Crop Recommendation System</div>
-    """, unsafe_allow_html=True)
+st.markdown('<div class="header">Crop Recommendation System</div>', unsafe_allow_html=True)
 
 # Title and description
 st.markdown('<h1 class="title">🌿 Crop Recommendation System</h1>', unsafe_allow_html=True)
@@ -145,15 +150,15 @@ with st.container():
     col1, col2 = st.columns(2)
 
     with col1:
-        nitrogen = st.number_input('Nitrogen (kg/ha)', min_value=0.0, value=0.0, step=0.01)
-        phosphorus = st.number_input('Phosphorus (kg/ha)', min_value=0.0, value=0.0, step=0.01)
-        potassium = st.number_input('Potassium (kg/ha)', min_value=0.0, value=0.0, step=0.01)
-        temperature = st.number_input('Temperature (°C)', min_value=-50.0, value=0.0, step=0.01)
+        nitrogen = st.number_input('Nitrogen (kg/ha)', min_value=0.0, value=0.0, step=0.01, key='nitrogen', help="Enter the amount of Nitrogen in kg per hectare.")
+        phosphorus = st.number_input('Phosphorus (kg/ha)', min_value=0.0, value=0.0, step=0.01, key='phosphorus', help="Enter the amount of Phosphorus in kg per hectare.")
+        potassium = st.number_input('Potassium (kg/ha)', min_value=0.0, value=0.0, step=0.01, key='potassium', help="Enter the amount of Potassium in kg per hectare.")
+        temperature = st.number_input('Temperature (°C)', min_value=-50.0, value=0.0, step=0.01, key='temperature', help="Enter the temperature in Celsius.")
 
     with col2:
-        humidity = st.number_input('Humidity (%)', min_value=0.0, value=0.0, step=0.01)
-        ph_value = st.number_input('pH Value', min_value=0.0, value=0.0, step=0.01)
-        rainfall = st.number_input('Rainfall (mm)', min_value=0.0, value=0.0, step=0.01)
+        humidity = st.number_input('Humidity (%)', min_value=0.0, value=0.0, step=0.01, key='humidity', help="Enter the humidity percentage.")
+        ph_value = st.number_input('pH Value', min_value=0.0, value=0.0, step=0.01, key='ph_value', help="Enter the pH value of the soil.")
+        rainfall = st.number_input('Rainfall (mm)', min_value=0.0, value=0.0, step=0.01, key='rainfall', help="Enter the amount of rainfall in mm.")
 
     st.markdown('</div>', unsafe_allow_html=True)
 
@@ -172,8 +177,8 @@ user_data = pd.DataFrame({
 user_data = Feature_Engineering(user_data)
 
 # Load Encoders
-encoder_1 = joblib.load("Ordinal_Encoder.pkl")
-encoder_2 = joblib.load("label_Encoder (1).pkl")
+encoder_1 = joblib.load("models/Ordinal_Encoder.pkl")
+encoder_2 = joblib.load("models/label_Encoder (1).pkl")
 
 # Apply Encoding
 user_data['PH_Cat'] = encoder_1.transform(user_data[['PH_Categories']])
@@ -192,63 +197,46 @@ SQ(user_data, SQ_Columns)
 user_data = PT(user_data, PT_Columns)
 
 # Load Scaler and Scale Data
-Scaller = joblib.load("FeatureScaler.pkl")
+Scaller = joblib.load("models/FeatureScaler.pkl")
 Scaller_Data = Scaller.transform(user_data)
-user_data = pd.DataFrame(data=Scaller_Data, columns=Scaller.get_feature_names_out(), index=user_data.index)
+user_data = pd.DataFrame(data=Scaller_Data, columns=user_data.columns)
 
-# Ensure columns match those expected by the scaler
-Final = user_data[['Log_Humidity', 'Log_Rainfall', 'Log_Rainfall_Humidity_Index',
-                   'PT_Potassium', 'Log_Phosphorus', 'Log_NPK_Average', 'Log_PK_Ratio',
-                   'SQ_Nitrogen', 'Log_NK_Ratio', 'Temp_Humididty_Index']]
+# Load the Model
+model = joblib.load('models/Extra_Tree_model.pkl')
 
-# Load Model
-model = joblib.load('Extra_Tree_model (1).pkl')
+# Predict the Crop
+prediction = model.predict(user_data)[0]
 
-# Define crop images URLs
+# Load Crop Images
 crop_images = {
-    "Rice": "https://example.com/images/rice.jpg",
-    "Maize": "https://example.com/images/maize.jpg",
-    "Jute": "https://example.com/images/jute.jpg",
-    "Cotton": "https://example.com/images/cotton.jpg",
-    "Coconut": "https://example.com/images/coconut.jpg",
-    "Papaya": "https://example.com/images/papaya.jpg",
-    "Orange": "https://example.com/images/orange.jpg",
-    "Apple": "https://example.com/images/apple.jpg",
-    "Muskmelon": "https://example.com/images/muskmelon.jpg",
-    "Watermelon": "https://example.com/images/watermelon.jpg",
-    "Grapes": "https://example.com/images/grapes.jpg",
-    "Mango": "https://example.com/images/mango.jpg",
-    "Banana": "https://example.com/images/banana.jpg",
-    "Pomegranate": "https://example.com/images/pomegranate.jpg",
-    "Lentil": "https://example.com/images/lentil.jpg",
-    "Blackgram": "https://example.com/images/blackgram.jpg",
-    "MungBean": "https://example.com/images/mungbean.jpg",
-    "MothBeans": "https://example.com/images/mothbeans.jpg",
-    "PigeonPeas": "https://example.com/images/pigeonpeas.jpg",
-    "KidneyBeans": "https://example.com/images/kidneybeans.jpg",
-    "ChickPea": "https://example.com/images/chickpea.jpg",
-    "Coffee": "https://example.com/images/coffee.jpg"
+    'Rice': 'https://example.com/images/rice.jpg',
+    'Maize': 'https://example.com/images/maize.jpg',
+    'Jute': 'https://example.com/images/jute.jpg',
+    'Cotton': 'https://example.com/images/cotton.jpg',
+    'Coconut': 'https://example.com/images/coconut.jpg',
+    'Papaya': 'https://example.com/images/papaya.jpg',
+    'Orange': 'https://example.com/images/orange.jpg',
+    'Apple': 'https://example.com/images/apple.jpg',
+    'Muskmelon': 'https://example.com/images/muskmelon.jpg',
+    'Watermelon': 'https://example.com/images/watermelon.jpg',
+    'Grapes': 'https://example.com/images/grapes.jpg',
+    'Mango': 'https://example.com/images/mango.jpg',
+    'Banana': 'https://example.com/images/banana.jpg',
+    'Pomegranate': 'https://example.com/images/pomegranate.jpg',
+    'Lentil': 'https://example.com/images/lentil.jpg',
+    'Blackgram': 'https://example.com/images/blackgram.jpg',
+    'MungBean': 'https://example.com/images/mungbean.jpg',
+    'MothBeans': 'https://example.com/images/mothbeans.jpg',
+    'PigeonPeas': 'https://example.com/images/pigeonpeas.jpg',
+    'KidneyBeans': 'https://example.com/images/kidneybeans.jpg',
+    'ChickPea': 'https://example.com/images/chickpea.jpg',
+    'Coffee': 'https://example.com/images/coffee.jpg'
 }
 
-# Predict
-try:
-    prediction = model.predict(Final)
-    prediction_prob = model.predict_proba(Final)
-    top_crops = list(crop_images.keys())
-    recommended_crop = top_crops[np.argmax(prediction_prob)]
-
-    st.subheader('Recommended Crop')
-    st.write(f"The recommended crop is: **{recommended_crop}**")
-    
-    # Display crop image
-    if recommended_crop in crop_images:
-        st.image(crop_images[recommended_crop], caption=recommended_crop, use_column_width=True)
-    else:
-        st.write("No image available for the recommended crop.")
-except Exception as e:
-    st.error(f"An error occurred: {e}")
+# Display Results
+st.markdown('<h2 style="text-align: center;">Recommended Crop</h2>', unsafe_allow_html=True)
+st.markdown(f'<h3 style="text-align: center; color: #4CAF50;">{prediction}</h3>', unsafe_allow_html=True)
+st.image(crop_images.get(prediction, 'https://example.com/images/default.jpg'), use_column_width=True)
 
 # Footer
-st.markdown("""
-    <div class="footer">Powered by Your Company | Contact us: info@yourcompany.com</div>
-    """, unsafe_allow_html=True)
+st.markdown('<div class="footer">Developed with ❤️ by [Khaled Sherif]</div>', unsafe_allow_html=True)
